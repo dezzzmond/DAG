@@ -3,6 +3,8 @@ import pickle
 import logging
 import datetime as dt
 
+from airflow import DAG
+
 from airflow.decorators import task, dag
 from airflow.models.param import Param
 
@@ -141,5 +143,4 @@ def pipeline_example():
     load_latest_data_slice(glove_vectors, None, None, None, None, None)
 
 
-if __name__ == "__main__":
-    pipeline_example_dag = pipeline_example()
+pipeline_example_dag = pipeline_example()
