@@ -3,10 +3,10 @@ import pickle
 import logging
 import datetime as dt
 
-from airflow import DAG
-
 from airflow.decorators import task, dag
 from airflow.models.param import Param
+
+from airflow.operators.python import get_current_context
 
 
 def get_latest_data_slice_name(object_list):
@@ -29,14 +29,16 @@ def get_latest_data_slice_name(object_list):
 )
 def pipeline_example():
     @task
-    def extract_latest_data_slice(
-        service_name,
-        region_name,
-        endpoint_url,
-        aws_access_key_id,
-        aws_secret_access_key
-    ):
+    def extract_latest_data_slice():
         logging.info("BEGIN")
+
+        context = get_current_context()
+
+        service_name = context["params"]["service_name"]
+        region_name = context["params"]["region_name"]
+        endpoint_url = context["params"]["endpoint_url"]
+        aws_access_key_id = context["params"]["aws_access_key_id"]
+        aws_secret_access_key = context["params"]["aws_secret_access_key"]
         # Here is a description of credentials needed to connect to S3-bucket via boto3 library:
         # https://developers.selectel.ru/docs/cloud-services/cloud-storage/s3/storage_s3_api/
         # Here is a description of S3-bucket creation and configuration:
@@ -101,16 +103,16 @@ def pipeline_example():
         return "get_glove_text_representations", text_data_rows
 
     @task
-    def load_latest_data_slice(
-        vectors,
-        service_name,
-        region_name,
-        endpoint_url,
-        aws_access_key_id,
-        aws_secret_access_key
-    ):
+    def load_latest_data_slice(vectors):
         logging.info("BEGIN")
 
+        context = get_current_context()
+
+        service_name = context["params"]["service_name"]
+        region_name = context["params"]["region_name"]
+        endpoint_url = context["params"]["endpoint_url"]
+        aws_access_key_id = context["params"]["aws_access_key_id"]
+        aws_secret_access_key = context["params"]["aws_secret_access_key"]
         # Here is a description of credentials needed to connect to S3-bucket via boto3 library:
         # https://developers.selectel.ru/docs/cloud-services/cloud-storage/s3/storage_s3_api/
         # Here is a description of S3-bucket creation and configuration:
@@ -132,15 +134,15 @@ def pipeline_example():
 
         logging.info("END")
 
-    text_data_rows = extract_latest_data_slice(None, None, None, None, None)
+    text_data_rows = extract_latest_data_slice()
 
     bow_vectors = get_bow_text_representations(text_data_rows)
     word2vec_vectors = get_word2vec_text_representations(text_data_rows)
     glove_vectors = get_glove_text_representations(text_data_rows)
 
-    load_latest_data_slice(bow_vectors, None, None, None, None, None)
-    load_latest_data_slice(word2vec_vectors, None, None, None, None, None)
-    load_latest_data_slice(glove_vectors, None, None, None, None, None)
+    load_latest_data_slice(bow_vectors)
+    load_latest_data_slice(word2vec_vectors)
+    load_latest_data_slice(glove_vectors)
 
 
 pipeline_example_dag = pipeline_example()
