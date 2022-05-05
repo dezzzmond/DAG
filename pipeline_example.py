@@ -1,3 +1,4 @@
+import time
 import boto3
 import pickle
 import logging
@@ -72,6 +73,8 @@ def pipeline_example():
         with open(target_data_slice_name.split("/")[-1], "r") as f:
             text_data_rows = f.readlines()
 
+        time.sleep(10)
+
         logging.info("END")
         return text_data_rows
 
@@ -79,6 +82,8 @@ def pipeline_example():
     def get_bow_text_representations(text_data_rows):
         logging.info("BEGIN")
         # ...
+
+        time.sleep(10)
 
         logging.info("END")
 
@@ -89,6 +94,8 @@ def pipeline_example():
         logging.info("BEGIN")
         # ...
 
+        time.sleep(10)
+
         logging.info("END")
 
         return "get_word2vec_text_representations", text_data_rows
@@ -97,6 +104,8 @@ def pipeline_example():
     def get_glove_text_representations(text_data_rows):
         logging.info("BEGIN")
         # ...
+
+        time.sleep(10)
 
         logging.info("END")
 
@@ -131,6 +140,8 @@ def pipeline_example():
         out_name = "get_text_vector_representations/result/{}/{}.pkl".format(dt.datetime.now(), vectors[0])
 
         client.upload_file("{}.pkl".format(vectors[0]), "efim-test-bucket", out_name)
+
+        time.sleep(10)
 
         logging.info("END")
 
