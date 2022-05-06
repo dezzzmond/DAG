@@ -1,6 +1,7 @@
 import time
 import boto3
 import pickle
+import random
 import logging
 import datetime as dt
 
@@ -73,7 +74,7 @@ def pipeline_example():
         with open(target_data_slice_name.split("/")[-1], "r") as f:
             text_data_rows = f.readlines()
 
-        time.sleep(10)
+        time.sleep(int(random.randint(5, 15)))
 
         logging.info("END")
         return text_data_rows
@@ -83,7 +84,7 @@ def pipeline_example():
         logging.info("BEGIN")
         # ...
 
-        time.sleep(10)
+        time.sleep(int(random.randint(5, 15)))
 
         logging.info("END")
 
@@ -94,7 +95,7 @@ def pipeline_example():
         logging.info("BEGIN")
         # ...
 
-        time.sleep(10)
+        time.sleep(int(random.randint(5, 15)))
 
         logging.info("END")
 
@@ -105,7 +106,7 @@ def pipeline_example():
         logging.info("BEGIN")
         # ...
 
-        time.sleep(10)
+        time.sleep(int(random.randint(5, 15)))
 
         logging.info("END")
 
@@ -141,7 +142,7 @@ def pipeline_example():
 
         client.upload_file("{}.pkl".format(vectors[0]), "efim-test-bucket", out_name)
 
-        time.sleep(10)
+        time.sleep(int(random.randint(5, 15)))
 
         logging.info("END")
 
